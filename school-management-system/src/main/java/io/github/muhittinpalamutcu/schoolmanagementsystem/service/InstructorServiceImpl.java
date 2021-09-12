@@ -163,6 +163,60 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     /**
+     * This method increase the salary of selected instructor
+     *
+     * @param id
+     * @param amount
+     * @param instructorType
+     * @return Instructor
+     * @throws BadRequestException if instructor doesn't exist in db.
+     * @see BadRequestException
+     */
+    public Instructor increaseInSalary(int id, int amount, String instructorType) {
+        Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
+        if (!optionalInstructor.isPresent()) {
+            throw new BadRequestException("There is no instructor with id: " + id);
+        }
+
+        if (instructorType.equals("permanent")) {
+            PermanentInstructor permanentInstructor = (PermanentInstructor) optionalInstructor.get();
+            permanentInstructor.setFixedSalary(permanentInstructor.getFixedSalary() + amount);
+            return instructorRepository.save(permanentInstructor);
+        } else {
+            VisitingResearcher visitingResearcher = (VisitingResearcher) optionalInstructor.get();
+            visitingResearcher.setHourlySalary(visitingResearcher.getHourlySalary() + amount);
+            return instructorRepository.save(visitingResearcher);
+        }
+    }
+
+    /**
+     * This method reduce the salary of selected instructor
+     *
+     * @param id
+     * @param amount
+     * @param instructorType
+     * @return Instructor
+     * @throws BadRequestException if instructor doesn't exist in db.
+     * @see BadRequestException
+     */
+    public Instructor reduceInSalary(int id, int amount, String instructorType) {
+        Optional<Instructor> optionalInstructor = instructorRepository.findById(id);
+        if (!optionalInstructor.isPresent()) {
+            throw new BadRequestException("There is no instructor with id: " + id);
+        }
+
+        if (instructorType.equals("permanent")) {
+            PermanentInstructor permanentInstructor = (PermanentInstructor) optionalInstructor.get();
+            permanentInstructor.setFixedSalary(permanentInstructor.getFixedSalary() - amount);
+            return instructorRepository.save(permanentInstructor);
+        } else {
+            VisitingResearcher visitingResearcher = (VisitingResearcher) optionalInstructor.get();
+            visitingResearcher.setHourlySalary(visitingResearcher.getHourlySalary() - amount);
+            return instructorRepository.save(visitingResearcher);
+        }
+    }
+
+    /**
      * This method check if instructor exist in db.
      *
      * @param id

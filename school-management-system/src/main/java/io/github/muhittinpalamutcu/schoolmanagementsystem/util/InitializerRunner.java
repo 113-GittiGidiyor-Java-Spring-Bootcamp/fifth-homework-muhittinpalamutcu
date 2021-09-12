@@ -3,6 +3,7 @@ package io.github.muhittinpalamutcu.schoolmanagementsystem.util;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.Course;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.PermanentInstructor;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.Student;
+import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.VisitingResearcher;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.CourseRepository;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.InstructorRepository;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.StudentRepository;
@@ -51,6 +52,7 @@ public class InitializerRunner implements CommandLineRunner {
         instructorRepository.save(PermanentInstructor.builder().name("Meltem").address("Izmir").phoneNumber("52232112367").fixedSalary(9000).createdDate(Instant.now()).lastModifiedDate(Instant.now()).build());
         instructorRepository.save(PermanentInstructor.builder().name("Volkan").address("Rotterdam").phoneNumber("52231272332").fixedSalary(10000).createdDate(Instant.now()).lastModifiedDate(Instant.now()).build());
         instructorRepository.save(PermanentInstructor.builder().name("Kuzey").address("Berlin").phoneNumber("52232112666").fixedSalary(7000).createdDate(Instant.now()).lastModifiedDate(Instant.now()).build());
+        instructorRepository.save(VisitingResearcher.builder().name("Muhittin").address("Köln").phoneNumber("5031237894").hourlySalary(5000).createdDate(Instant.now()).lastModifiedDate(Instant.now()).build());
 
     }
 }

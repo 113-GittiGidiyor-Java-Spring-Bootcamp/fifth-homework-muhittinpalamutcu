@@ -104,4 +104,20 @@ public class InstructorController {
         instructorService.deleteByName(name);
         return "Instructor deleted...";
     }
+
+    //@desc Increase salary of selected instructor
+    //@route Patch /api/instructors/{id}/increase-in-salary/{instructorType}
+    @PatchMapping("/instructors/{id}/increase-in-salary/{instructorType}")
+    public Instructor increaseInSalary(@PathVariable int id, @RequestBody int amount, @PathVariable String instructorType) {
+        return instructorService.increaseInSalary(id, amount, instructorType);
+    }
+
+    //@desc Reduce salary of selected instructor
+    //@route Patch /api/instructors/{id}/reduce-in-salary/{instructorType}
+    @PatchMapping("/instructors/{id}/reduce-in-salary/{instructorType}")
+    public Instructor reduceInSalary(@PathVariable int id, @RequestBody int amount, @PathVariable String instructorType) {
+        return instructorService.reduceInSalary(id, amount, instructorType);
+    }
+
+
 }
