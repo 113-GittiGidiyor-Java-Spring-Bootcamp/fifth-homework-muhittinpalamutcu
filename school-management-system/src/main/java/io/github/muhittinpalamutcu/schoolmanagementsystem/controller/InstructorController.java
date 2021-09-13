@@ -5,6 +5,7 @@ import io.github.muhittinpalamutcu.schoolmanagementsystem.dto.VisitingResearcher
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.Instructor;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.service.InstructorServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InstructorController {
 
+    @Autowired
     private final InstructorServiceImpl instructorService;
 
     // @desc Get all instructors
@@ -118,6 +120,5 @@ public class InstructorController {
     public Instructor reduceInSalary(@PathVariable int id, @RequestBody int amount, @PathVariable String instructorType) {
         return instructorService.reduceInSalary(id, amount, instructorType);
     }
-
 
 }

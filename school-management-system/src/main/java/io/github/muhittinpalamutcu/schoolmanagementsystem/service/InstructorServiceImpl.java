@@ -17,6 +17,7 @@ import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.InstructorS
 import io.github.muhittinpalamutcu.schoolmanagementsystem.util.ClientRequestInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -228,6 +229,31 @@ public class InstructorServiceImpl implements InstructorService {
             visitingResearcher.setHourlySalary(visitingResearcher.getHourlySalary() - amount);
             return instructorRepository.save(visitingResearcher);
         }
+    }
+
+    /**
+     * This method returns the salary transactions according to instructor id
+     *
+     * @param id
+     * @return List<InstructorSalaryTransactionLogger>
+     * @throws BadRequestException if instructor doesn't exist in db.
+     * @see BadRequestException
+     */
+    public List<InstructorSalaryTransactionLogger> searchSalaryTransactionsById(int id) {
+        if (!isExists(id)) {
+            throw new BadRequestException("There is no instructor with id: " + id);
+        }
+        return instructorSalaryTransactionLoggerRepository.findByInstructorId(id);
+    }
+
+    /**
+     * This method returns the salary transactions according to date
+     *
+     * @param localDate
+     * @return List<InstructorSalaryTransactionLogger>
+     */
+    public List<InstructorSalaryTransactionLogger> searchSalaryTransactionsByDate(LocalDate localDate) {
+        return instructorSalaryTransactionLoggerRepository.findByTransactionDateTime(localDate);
     }
 
     /**
