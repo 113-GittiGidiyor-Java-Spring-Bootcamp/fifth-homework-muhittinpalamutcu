@@ -32,8 +32,8 @@ public class InstructorControllerTest {
     @Test
     void savePermanentInstructor() {
         // given
-        Instructor course = new PermanentInstructor();
-        Optional<Instructor> expected = Optional.of(course);
+        Instructor instructor = new PermanentInstructor();
+        Optional<Instructor> expected = Optional.of(instructor);
         when(mockInstructorService.save(any())).thenReturn(expected);
 
         // when
@@ -50,8 +50,8 @@ public class InstructorControllerTest {
     @Test
     void saveVisitingResearcher() {
         // given
-        Instructor course = new VisitingResearcher();
-        Optional<Instructor> expected = Optional.of(course);
+        Instructor instructor = new VisitingResearcher();
+        Optional<Instructor> expected = Optional.of(instructor);
         when(mockInstructorService.save(any())).thenReturn(expected);
 
         // when

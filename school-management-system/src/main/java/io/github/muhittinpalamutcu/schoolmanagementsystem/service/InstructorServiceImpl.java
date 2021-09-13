@@ -17,7 +17,6 @@ import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.InstructorS
 import io.github.muhittinpalamutcu.schoolmanagementsystem.util.ClientRequestInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
