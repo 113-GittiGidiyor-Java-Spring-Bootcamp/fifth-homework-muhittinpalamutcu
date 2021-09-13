@@ -4,18 +4,23 @@ import io.github.muhittinpalamutcu.schoolmanagementsystem.dto.InstructorDTO;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.dto.PermanentInstructorDTO;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.dto.VisitingResearcherDTO;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.Instructor;
+import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.InstructorSalaryTransactionLogger;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.PermanentInstructor;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.VisitingResearcher;
+import io.github.muhittinpalamutcu.schoolmanagementsystem.entity.enumeration.SalaryTransactionType;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.exceptions.BadRequestException;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.exceptions.InstructorIsAlreadyExistException;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.mappers.PermanentInstructorMapper;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.mappers.VisitingResearcherMapper;
 import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.InstructorRepository;
+import io.github.muhittinpalamutcu.schoolmanagementsystem.repository.InstructorSalaryTransactionRepository;
+import io.github.muhittinpalamutcu.schoolmanagementsystem.util.ClientRequestInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +34,11 @@ public class InstructorServiceImpl implements InstructorService {
     private PermanentInstructorMapper permanentInstructorMapper;
     @Autowired
     private VisitingResearcherMapper visitingResearcherMapper;
+    @Autowired
+    private InstructorSalaryTransactionRepository instructorSalaryTransactionLoggerRepository;
+    @Autowired
+    private ClientRequestInfo clientRequestInfo;
+
 
     /**
      * This method return all the instructors exist in the database.
@@ -180,10 +190,12 @@ public class InstructorServiceImpl implements InstructorService {
 
         if (instructorType.equals("permanent")) {
             PermanentInstructor permanentInstructor = (PermanentInstructor) optionalInstructor.get();
+            saveTransactionToDatabase(permanentInstructor, amount, SalaryTransactionType.INCREASE);
             permanentInstructor.setFixedSalary(permanentInstructor.getFixedSalary() + amount);
             return instructorRepository.save(permanentInstructor);
         } else {
             VisitingResearcher visitingResearcher = (VisitingResearcher) optionalInstructor.get();
+            saveTransactionToDatabase(visitingResearcher, amount, SalaryTransactionType.INCREASE);
             visitingResearcher.setHourlySalary(visitingResearcher.getHourlySalary() + amount);
             return instructorRepository.save(visitingResearcher);
         }
@@ -207,10 +219,12 @@ public class InstructorServiceImpl implements InstructorService {
 
         if (instructorType.equals("permanent")) {
             PermanentInstructor permanentInstructor = (PermanentInstructor) optionalInstructor.get();
+            saveTransactionToDatabase(permanentInstructor, amount, SalaryTransactionType.REDUCE);
             permanentInstructor.setFixedSalary(permanentInstructor.getFixedSalary() - amount);
             return instructorRepository.save(permanentInstructor);
         } else {
             VisitingResearcher visitingResearcher = (VisitingResearcher) optionalInstructor.get();
+            saveTransactionToDatabase(visitingResearcher, amount, SalaryTransactionType.REDUCE);
             visitingResearcher.setHourlySalary(visitingResearcher.getHourlySalary() - amount);
             return instructorRepository.save(visitingResearcher);
         }
@@ -224,5 +238,46 @@ public class InstructorServiceImpl implements InstructorService {
      */
     public boolean isExists(int id) {
         return instructorRepository.existsById(id);
+    }
+
+    /**
+     * This method saves the transaction operation for instructor
+     *
+     * @param instructor
+     * @param amount
+     * @param transactionType
+     */
+    private void saveTransactionToDatabase(Instructor instructor, double amount, SalaryTransactionType transactionType) {
+        InstructorSalaryTransactionLogger transactionLogger = new InstructorSalaryTransactionLogger();
+        transactionLogger.setInstructorId(instructor.getId());
+        if (transactionType.equals(SalaryTransactionType.INCREASE)) {
+            if (instructor instanceof PermanentInstructor) {
+                PermanentInstructor permanentInstructor = (PermanentInstructor) instructor;
+                transactionLogger.setSalaryBefore(permanentInstructor.getFixedSalary());
+                transactionLogger.setSalaryAfter(permanentInstructor.getFixedSalary() + amount);
+            } else {
+                VisitingResearcher visitingResearcher = (VisitingResearcher) instructor;
+                transactionLogger.setSalaryBefore(visitingResearcher.getHourlySalary());
+                transactionLogger.setSalaryAfter(visitingResearcher.getHourlySalary() + amount);
+            }
+        } else {
+            if (instructor instanceof PermanentInstructor) {
+                PermanentInstructor permanentInstructor = (PermanentInstructor) instructor;
+                transactionLogger.setSalaryBefore(permanentInstructor.getFixedSalary());
+                transactionLogger.setSalaryAfter(permanentInstructor.getFixedSalary() - amount);
+            } else {
+                VisitingResearcher visitingResearcher = (VisitingResearcher) instructor;
+                transactionLogger.setSalaryBefore(visitingResearcher.getHourlySalary());
+                transactionLogger.setSalaryAfter(visitingResearcher.getHourlySalary() - amount);
+            }
+        }
+
+        transactionLogger.setTransactionAmount(amount);
+        transactionLogger.setTransactionDateTime(LocalDate.now());
+        transactionLogger.setClientUrl(clientRequestInfo.getClientUrl());
+        transactionLogger.setClientIpAddress(clientRequestInfo.getClientIpAddress());
+        transactionLogger.setSessionActivityId(clientRequestInfo.getSessionActivityId());
+        transactionLogger.setTransactionType(transactionType);
+        this.instructorSalaryTransactionLoggerRepository.save(transactionLogger);
     }
 }
