@@ -38,7 +38,7 @@ public class InstructorControllerTest {
 
         // when
         PermanentInstructorDTO dto = new PermanentInstructorDTO();
-        Instructor actual = this.instructorController.savePermanentInstructor(dto).getBody();
+        Instructor actual = instructorController.savePermanentInstructor(dto).getBody();
 
         // then
         assertAll(
@@ -56,7 +56,7 @@ public class InstructorControllerTest {
 
         // when
         VisitingResearcherDTO dto = new VisitingResearcherDTO();
-        Instructor actual = this.instructorController.saveVisitingResearcher(dto).getBody();
+        Instructor actual = instructorController.saveVisitingResearcher(dto).getBody();
 
         // then
         assertAll(
@@ -72,7 +72,7 @@ public class InstructorControllerTest {
 
         // when
         PermanentInstructorDTO dto = new PermanentInstructorDTO();
-        ResponseEntity<Instructor> actual = this.instructorController.savePermanentInstructor(dto);
+        ResponseEntity<Instructor> actual = instructorController.savePermanentInstructor(dto);
 
         // then
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
@@ -85,7 +85,7 @@ public class InstructorControllerTest {
 
         // when
         VisitingResearcherDTO dto = new VisitingResearcherDTO();
-        ResponseEntity<Instructor> actual = this.instructorController.saveVisitingResearcher(dto);
+        ResponseEntity<Instructor> actual = instructorController.saveVisitingResearcher(dto);
 
         // then
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
@@ -94,13 +94,12 @@ public class InstructorControllerTest {
     @Test
     void updatePermanentInstructor() {
         // given
-        Instructor instructor = new PermanentInstructor();
-        Instructor expected = instructor;
+        Instructor expected = new PermanentInstructor();
         when(mockInstructorService.update(any())).thenReturn(expected);
 
         // when
         PermanentInstructorDTO dto = new PermanentInstructorDTO();
-        Instructor actual = this.instructorController.updatePermanentInstructor(dto);
+        Instructor actual = instructorController.updatePermanentInstructor(dto);
 
         // then
         assertAll(
@@ -112,13 +111,12 @@ public class InstructorControllerTest {
     @Test
     void updateVisitingResearcher() {
         // given
-        Instructor instructor = new VisitingResearcher();
-        Instructor expected = instructor;
+        Instructor expected = new VisitingResearcher();
         when(mockInstructorService.update(any())).thenReturn(expected);
 
         // when
         VisitingResearcherDTO dto = new VisitingResearcherDTO();
-        Instructor actual = this.instructorController.updateVisitingResearcher(dto);
+        Instructor actual = instructorController.updateVisitingResearcher(dto);
 
         // then
         assertAll(
@@ -126,6 +124,4 @@ public class InstructorControllerTest {
                 () -> assertEquals(expected, actual)
         );
     }
-
-
 }

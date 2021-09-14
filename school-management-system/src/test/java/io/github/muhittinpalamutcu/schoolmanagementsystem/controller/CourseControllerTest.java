@@ -36,12 +36,12 @@ public class CourseControllerTest {
 
         // when
         CourseDTO dto = new CourseDTO();
-        Course actual = this.courseController.saveCourse(dto).getBody();
+        ResponseEntity<Course> actual = courseController.saveCourse(dto);
 
         // then
         assertAll(
-                () -> assertNotNull(actual),
-                () -> assertEquals(expected.get(), actual)
+                () -> assertNotNull(actual.getBody()),
+                () -> assertEquals(expected.get(), actual.getBody())
         );
     }
 
@@ -52,22 +52,22 @@ public class CourseControllerTest {
 
         // when
         CourseDTO dto = new CourseDTO();
-        ResponseEntity<Course> actual = this.courseController.saveCourse(dto);
+        ResponseEntity<Course> actual = courseController.saveCourse(dto);
 
         // then
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
+        assertNull(actual.getBody());
     }
 
     @Test
     void updateCourse() {
         // given
-        Course course = new Course();
-        Course expected = course;
+        Course expected = new Course();
         when(mockCourseService.update(any())).thenReturn(expected);
 
         // when
         CourseDTO dto = new CourseDTO();
-        Course actual = this.courseController.updateCourse(dto);
+        Course actual = courseController.updateCourse(dto);
 
         // then
         assertAll(

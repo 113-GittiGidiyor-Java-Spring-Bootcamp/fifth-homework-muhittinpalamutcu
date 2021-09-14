@@ -34,7 +34,7 @@ public class StudentControllerTest {
 
         // when
         StudentDTO dto = new StudentDTO();
-        Student actual = this.studentController.saveStudent(dto).getBody();
+        Student actual = studentController.saveStudent(dto).getBody();
 
         // then
         assertAll(
@@ -50,7 +50,7 @@ public class StudentControllerTest {
 
         // when
         StudentDTO dto = new StudentDTO();
-        ResponseEntity<Student> actual = this.studentController.saveStudent(dto);
+        ResponseEntity<Student> actual = studentController.saveStudent(dto);
 
         // then
         assertEquals(HttpStatus.BAD_REQUEST, actual.getStatusCode());
@@ -59,13 +59,12 @@ public class StudentControllerTest {
     @Test
     void updateStudent() {
         // given
-        Student student = new Student();
-        Student expected = student;
+        Student expected = new Student();
         when(mockStudentService.update(any())).thenReturn(expected);
 
         // when
         StudentDTO dto = new StudentDTO();
-        Student actual = this.studentController.updateStudent(dto);
+        Student actual = studentController.updateStudent(dto);
 
         // then
         assertAll(

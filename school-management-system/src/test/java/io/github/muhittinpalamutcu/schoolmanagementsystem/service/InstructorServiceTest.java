@@ -46,7 +46,7 @@ public class InstructorServiceTest {
 
         // when
         PermanentInstructorDTO dto = new PermanentInstructorDTO();
-        Instructor actual = this.instructorService.save(dto).get();
+        Instructor actual = instructorService.save(dto).get();
 
         // then
         assertAll(
@@ -64,7 +64,7 @@ public class InstructorServiceTest {
 
         // when
         VisitingResearcherDTO dto = new VisitingResearcherDTO();
-        Instructor actual = this.instructorService.save(dto).get();
+        Instructor actual = instructorService.save(dto).get();
 
         // then
         assertAll(
@@ -76,12 +76,11 @@ public class InstructorServiceTest {
     @Test
     void savePermanentInstructor2() {
         // given
-        Instructor instructor = new PermanentInstructor();
-        when(mockInstructorRepository.existsById(anyInt())).thenReturn(Boolean.TRUE);
+        when(mockInstructorRepository.existsById(anyInt())).thenReturn(true);
 
         // when
         PermanentInstructorDTO dto = new PermanentInstructorDTO();
-        Executable executable = () -> this.instructorService.save(dto).get();
+        Executable executable = () -> instructorService.save(dto).get();
 
         // then
         assertThrows(BadRequestException.class, executable);
@@ -90,12 +89,11 @@ public class InstructorServiceTest {
     @Test
     void saveVisitingResearcher2() {
         // given
-        Instructor instructor = new VisitingResearcher();
-        when(mockInstructorRepository.existsById(anyInt())).thenReturn(Boolean.TRUE);
+        when(mockInstructorRepository.existsById(anyInt())).thenReturn(true);
 
         // when
         VisitingResearcherDTO dto = new VisitingResearcherDTO();
-        Executable executable = () -> this.instructorService.save(dto).get();
+        Executable executable = () -> instructorService.save(dto).get();
 
         // then
         assertThrows(BadRequestException.class, executable);

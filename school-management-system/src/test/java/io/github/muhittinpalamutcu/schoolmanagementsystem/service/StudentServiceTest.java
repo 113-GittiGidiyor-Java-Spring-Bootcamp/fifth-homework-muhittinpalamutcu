@@ -43,7 +43,7 @@ public class StudentServiceTest {
         // when
         StudentDTO dto = new StudentDTO();
         dto.setBirthDate(LocalDate.of(1996, 2, 15));
-        Student actual = this.studentService.save(dto).get();
+        Student actual = studentService.save(dto).get();
 
         // then
         assertAll(
@@ -55,12 +55,11 @@ public class StudentServiceTest {
     @Test
     void saveStudent2() {
         // given
-        Student student = new Student();
-        when(mockStudentRepository.existsById(anyInt())).thenReturn(Boolean.TRUE);
+        when(mockStudentRepository.existsById(anyInt())).thenReturn(true);
 
         // when
         StudentDTO dto = new StudentDTO();
-        Executable executable = () -> this.studentService.save(dto).get();
+        Executable executable = () -> studentService.save(dto).get();
 
         // then
         assertThrows(BadRequestException.class, executable);
